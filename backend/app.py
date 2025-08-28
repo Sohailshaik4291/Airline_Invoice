@@ -1,34 +1,32 @@
-from flask import Flask, jsonify, request
-from flask_cors import CORS
 import os
-from services.downloader import download_invoice
-from services.parser import parse_invoice
-from models.invoice_story import store, get_all_invoices, get_summary
+from flask import Flask, send_from_directory
+from flask_cors import CORS
+from dotenv import load_dotenv
+from pathlib import Path
 
-app = Flask(__name__)
+load_dotenv()  # loads .env if present
+
+# ensure directories exist
+BASE_DIR = Path(__file__).resolve().parent
+(Path(BASE_DIR / "invoices")).mkdir(parents=True, exist_ok=True)
+(Path(BASE_DIR / "parsed_data")).mkdir(parents=True, exist_ok=True)
+
+app = Flask(__name__, static_folder=None)
 CORS(app)
 
-@app.route("/passengers", methods=["GET"])
-def get_passengers():
-    return jsonify(store["passengers"])
+# register routes
+from routes.passengers import passenger_bp
+from routes.invoices import invoice_bp
 
-@app.route("/download/<int:pid>", methods=["POST"])
-def download(pid):
-    result = download_invoice(pid)
-    return jsonify(result)
+app.register_blueprint(passenger_bp, url_prefix="/api/passengers")
+app.register_blueprint(invoice_bp, url_prefix="/api/invoices")
 
-@app.route("/parse/<int:pid>", methods=["POST"])
-def parse(pid):
-    result = parse_invoice(pid)
-    return jsonify(result)
-
-@app.route("/invoices", methods=["GET"])
-def invoices():
-    return jsonify(get_all_invoices())
-
-@app.route("/summary", methods=["GET"])
-def summary():
-    return jsonify(get_summary())
+# simple PDF serving (so frontend can open PDF URL)
+@app.route("/invoices/<path:filename>")
+def serve_invoice(filename):
+    return send_from_directory(os.path.join(BASE_DIR, "invoices"), filename)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    debug = os.getenv("FLASK_DEBUG", "1") == "1"
+    port = int(os.getenv("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=debug)

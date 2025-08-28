@@ -1,0 +1,22 @@
+[
+  {
+    "ticket_number": "2172860898782",
+    "pdf_url": "/invoices/2172860898782.pdf",
+    "invoice_no": "INV898782",
+    "date": "2025-08-28",
+    "airline": "Indigo",
+    "amount": 13522.28,
+    "gstin": "NR3MF9GGARCKD0Q",
+    "status": "Parsed"
+  },
+  {
+    "ticket_number": "2173425250895",
+    "pdf_url": "/invoices/2173425250895.pdf",
+    "invoice_no": "INV250895",
+    "date": "2025-08-28",
+    "airline": "Indigo",
+    "amount": 7999.8,
+    "gstin": null,
+    "status": "Parsed"
+  }
+]
