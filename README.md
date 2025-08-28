@@ -79,3 +79,16 @@ Error badges
 Refresh buttons
 
 Flag for review (UI state only)
+
+
+
+
+📡 API Endpoints
+Method	Endpoint	Description
+GET	/api/passengers/	List passenger records with download/parse status
+POST	/api/invoices/download/:ticket_number	Download invoice PDF (simulated)
+POST	/api/invoices/parse/:ticket_number	Parse invoice PDF and store structured data
+GET	/api/invoices/	List all parsed invoices
+GET	/api/invoices/summary	Airline-wise totals
+GET	/api/invoices/high-value?threshold=10000	Invoices above threshold
+GET	/invoices/:file.pdf	Serve raw PDF file
